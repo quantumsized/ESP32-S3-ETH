@@ -37,11 +37,11 @@ AHT20 aht20;
 #define W5500_MOSI  11
 #define W5500_CS    14    // DO NOT use 34–39 (input-only) for CS
 #define W5500_INT   10
-IPAddress ip(192, 168, 1, 67);
+IPAddress ip(192, 168, 1, 67); // This is just in case I could set a static IP, otherwise it will use DHCP
 
 // --- Watchdog timeout
 // Define the watchdog timeout in seconds
-#define WDT_TIMEOUT_SECONDS 32 
+#define WDT_TIMEOUT_SECONDS 32 // Set to be a little longer than the read and send loop in case of freeze-up
 
 // --- MQTT topics ---
 const char* topics[] = {
@@ -55,7 +55,7 @@ char *subscribeTopic = "walkin/**";
 
 // --- Variables for the publishing loop ---
 long lastPublishMillis = 0;
-const long publishInterval = 30000; // Publish every 5 seconds
+const long publishInterval = 30000; // Publish every 30 seconds
 int startupCount = 0;
 int graceTime = 3;
 
@@ -89,7 +89,7 @@ void setup() {
     Serial.println("AHT20 not detected. Please check wiring. Freezing.");
     while(true) {
       delay(2000);
-      //ESP.restart(); // Restart module on fail
+      //ESP.restart(); // Restart module on fail. Use if needed
     }
   }
 
@@ -108,8 +108,8 @@ void setup() {
 
 
   // Initialize W5500 Ethernet
-  Ethernet.init(driver);
   SPI.begin(W5500_SCK, W5500_MISO, W5500_MOSI); // SCK, MISO, MOSI
+  Ethernet.init(driver);
   // start the Ethernet connection:
   Serial.println("Initialize Ethernet with DHCP:");
   if (Ethernet.begin() == 0) {
@@ -135,7 +135,7 @@ void setup() {
   mqttClient.loopStart();
 
   // Set random seed for client ID
-  randomSeed(micros());
+  randomSeed(micros()); // I don't remember if this is really needed anymore but there just in case
 
   // De-initialize the default watchdog, if it was already initialized
   esp_task_wdt_deinit(); 
@@ -175,7 +175,7 @@ void loop() {
     delay(1); // Crucial: A small delay after esp_task_wdt_reset() can be necessary for the reset to register properly.
     
   // Check if it's time to publish
-  if (millis() - lastPublishMillis > publishInterval) {
+  if (millis() - lastPublishMillis > publishInterval) { // Using millis as an alternate to delay() so other things keep running
     lastPublishMillis = millis();
 
     // Get AHT20 readings
