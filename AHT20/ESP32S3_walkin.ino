@@ -1,6 +1,6 @@
 /*
 This one will work eventually. Started 9/28/25
-Tried PubSubClient. Might have to go to the other MQTT version that said it was string safe
+Check for pull-up resistors on your AHT20. Mine had them and so did not need extra ones on the SDA and SCL pins.
 Working as of 9/28/25
 Publishes to MQTT server over Ethernet values from AHT20
 */
