@@ -1,0 +1,1 @@
+This is for a 3D printable box for the Waveshare ESP32-S3-ETH development board. Printed on Creality Ender3 V2 with a few upgrades such as dual Z axis motors, direct-drive extruder, and all-metal hot-end.
